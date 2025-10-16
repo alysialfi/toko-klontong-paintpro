@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     '@nuxt/test-utils',
     'shadcn-nuxt',
     '@pinia/nuxt',
+    '@nuxtjs/google-fonts',
   ],
   css: ['~/assets/tailwind.css'],
   vite: {
@@ -27,4 +28,10 @@ export default defineNuxtConfig({
      */
     componentDir: './components/ui'
   },
+  googleFonts: {
+    families: {
+      'Plus Jakarta Sans': [100, 200, 300, 400, 500, 600, 700, 800],
+      // Inter: [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    },
+  }
 })
