@@ -13,9 +13,15 @@ onMounted(async () => {
   await productStore.fetchProducts()
 })
 
-const products = computed(() => productStore.getProducts)
 const isLoading = computed(() => productStore.getLoading)
-  
+
+const snacksAndBeverages = computed(() => {
+  return productStore.getProducts.filter(product => 
+    product.CategoryId === 1 ||
+    product.CategoryId === 2
+  )
+})
+
 const addToCart = (product: Product) => {
   console.log('Add to cart:', product)
   router.push(`/product/${product._id}`)
@@ -54,14 +60,14 @@ const addToCart = (product: Product) => {
     </section>
 
     <!-- Products Section -->
-    <section id="products" class="py-28 px-8 md:px-0">
+    <section id="products" class="py-14 md:py-28 px-8 md:px-0">
       <div class="container mx-auto">
         <div class="text-center">
           <h2 class="text-xl md:text-4xl font-bold mb-4">Snacks & Minuman</h2>
-          <p class="text-base md:text-xl mb-6">Dari kebutuhan dapur, minuman dingin, hingga perlengkapan rumah tangga ada di satu tempat! Nikmati harga terjangkau.</p>
+          <p class="text-base md:text-xl mb-6">Dari makanan ringan hingga minuman dingin ada di satu tempat! Nikmati harga terjangkau.</p>
         </div>
         <ProductContainerCarousel
-          :products="products" 
+          :products="snacksAndBeverages" 
           :loading="isLoading"
           @add-to-cart="addToCart" 
         />
