@@ -70,51 +70,58 @@ const showNavigation = computed(() => totalItems.value > itemsPerView.value)
       <p class="text-gray-500">Tidak ada produk yang tersedia</p>
     </div>
 
-    <Carousel
-      v-else
-      class="w-full"
-      :opts="{
-        align: 'start',
-        dragFree: true,
-        skipSnaps: true
-      }"
-    >
-      <CarouselContent class="-ml-4">
-        <CarouselItem v-for="product in products" :key="product.id" class="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
-          <Card class="h-full">
-            <CardHeader class="p-0 h-48 flex justify-center">
-              <img 
-                :src="product.image" 
-                :alt="product.name" 
-                class="w-full h-48 object-cover"
-                @error="handleImageError">
-            </CardHeader>
-            <CardContent class="text-center">
-              <CardTitle class="line-clamp-1">{{ product.name }}</CardTitle>
-              <CardDescription v-if="product.description" class="line-clamp-2 mt-2">
-                {{ product.description }}
-              </CardDescription>
-              <p class="text-lg font-semibold text-primary mt-2">{{ formatPrice(product.price) }}</p>
-            </CardContent>
-            <CardFooter>
-              <Button 
-                class="w-full"
-                :disabled="product.stock === 0"
-                @click="emit('add-to-cart', product)"
-              >
-                Beli
-              </Button>
-            </CardFooter>
-          </Card>
-        </CarouselItem>
+    <div v-else class="relative">
+      <Carousel
+        class="w-full"
+        :opts="{
+          align: 'start',
+          dragFree: true,
+          skipSnaps: true
+        }"
+      >
+        <CarouselContent class="-ml-4">
+          <CarouselItem v-for="product in products" :key="product.id" class="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+            <Card class="h-full">
+              <CardHeader class="p-0 h-48 flex justify-center">
+                <img 
+                  :src="product.image" 
+                  :alt="product.name" 
+                  class="w-full h-48 object-cover"
+                  @error="handleImageError">
+              </CardHeader>
+              <CardContent class="text-center">
+                <CardTitle class="line-clamp-1">{{ product.name }}</CardTitle>
+                <CardDescription v-if="product.description" class="line-clamp-2 mt-2">
+                  {{ product.description }}
+                </CardDescription>
+                <p class="text-lg font-semibold text-primary mt-2">{{ formatPrice(product.price) }}</p>
+              </CardContent>
+              <CardFooter>
+                <Button 
+                  class="w-full"
+                  :disabled="product.stock === 0"
+                  @click="emit('add-to-cart', product)"
+                >
+                  Beli
+                </Button>
+              </CardFooter>
+            </Card>
+          </CarouselItem>
 
-        <CarouselItem class="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
-          <ProductCTA />
-        </CarouselItem>
-      </CarouselContent>
-
-      <CarouselPrevious v-if="showNavigation" />
-      <CarouselNext v-if="showNavigation" />
-    </Carousel>
+          <CarouselItem class="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+            <ProductCTA />
+          </CarouselItem>
+        </CarouselContent>
+        
+        <CarouselPrevious 
+          v-if="showNavigation" 
+          class="absolute top-1/2 -translate-y-1/2 -left-4 md:-left-5"
+        />
+        <CarouselNext 
+          v-if="showNavigation" 
+          class="absolute top-1/2 -translate-y-1/2 -right-4 md:-right-5"
+        />
+      </Carousel>
+    </div>
   </div>
 </template>
