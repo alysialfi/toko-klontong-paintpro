@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
 import ProductContainerCarousel from '@/components/ProductContainerCarousel'
+import ProductContainer from '@/components/ProductContainer'
 import type { Product } from '@/models/Product'
 import { useProductStore } from '@/stores/product'
 import { onMounted, computed } from 'vue'
@@ -14,6 +15,7 @@ onMounted(async () => {
 })
 
 const isLoading = computed(() => productStore.getLoading)
+const allProducts = computed(() => productStore.getProducts)
 
 const snacksAndBeverages = computed(() => {
   return productStore.getProducts.filter(product => 
@@ -31,10 +33,10 @@ const addToCart = (product: Product) => {
 <template>
   <section>
     <!-- Hero Section -->
-    <section class="flex relative h-screen w-screen flex-col md:flex-row">
-      <div class="absolute top-8 left-8 md:top-16 md:left-16">
+    <section class="flex relative h-full md:h-screen w-screen flex-col md:flex-row">
+      <div @click="router.push('/login')" class="absolute top-8 left-8 md:top-16 md:left-16 cursor-pointer">
         <div class="flex gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <svg xmlns="http://www.w3.org/2000/</div>svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
           </svg>
           Login
@@ -75,7 +77,7 @@ const addToCart = (product: Product) => {
     </section>
 
     <!-- Promo Section -->
-    <section id="promo" class="py-14 md:py-28 px-8 md:px-0">
+    <section id="promo" class="pb-14 md:pb-28 px-8 md:px-0">
       <div class="flex flex-col md:flex-row gap-8 md:px-0 sm:container sm:items-center">
         <img src="/images/promo/illustration.jpg" alt="Cart full of snacks" class="w-full h-auto md:w-1/2">
         <div class="w-full md:w-1/2 flex items-center">
@@ -85,6 +87,21 @@ const addToCart = (product: Product) => {
             <Button @click="router.push('/product/')" class="self-start">Klaim Promo</Button>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Products Section All -->
+    <section id="products" class="pb-14 md:pb-28 px-8 md:px-0">
+      <div class="container mx-auto">
+        <div class="text-center">
+          <h2 class="text-xl md:text-4xl font-bold mb-4">Produk Terbaru</h2>
+          <p class="text-base md:text-xl mb-6">Nikmati harga terjangkau di Toko Kelontong Mas Yanto. Lengkap dan berkualitas.</p>
+        </div>
+        <ProductContainer
+          :products="allProducts" 
+          :loading="isLoading"
+          @add-to-cart="addToCart" 
+        />
       </div>
     </section>
   </section>
