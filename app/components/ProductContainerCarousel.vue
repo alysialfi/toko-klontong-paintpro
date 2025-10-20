@@ -9,6 +9,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import type { Product } from '@/models/Product'
+import ProductCTA from './ProductCTA.vue'
 
 const emit = defineEmits(['add-to-cart'])
 
@@ -36,6 +37,21 @@ const handleImageError = (event) => {
   img.src = '/images/products/doritos.jpg'
   img.onerror = null
 }
+
+// Calculate total items (products + CTA card)
+const totalItems = computed(() => props.products.length + 1)
+
+// Calculate items per view based on screen size
+const itemsPerView = computed(() => {
+  if (typeof window === 'undefined') return 1
+  if (window.innerWidth >= 1024) return 4 // lg
+  if (window.innerWidth >= 768) return 3  // md
+  if (window.innerWidth >= 640) return 2  // sm
+  return 1                                // mobile
+})
+
+// Determine if navigation is needed
+const showNavigation = computed(() => totalItems.value > itemsPerView.value)
 </script>
 
 <template>
@@ -91,10 +107,14 @@ const handleImageError = (event) => {
             </CardFooter>
           </Card>
         </CarouselItem>
+
+        <CarouselItem class="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+          <ProductCTA />
+        </CarouselItem>
       </CarouselContent>
 
-      <CarouselPrevious />
-      <CarouselNext />
+      <CarouselPrevious v-if="showNavigation" />
+      <CarouselNext v-if="showNavigation" />
     </Carousel>
   </div>
 </template>
