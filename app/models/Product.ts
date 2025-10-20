@@ -17,11 +17,11 @@ export type ProductCreateInput = Omit<Product, '_id'>;
 
 export type ProductCategory = {
   id: 1 | 2 | 3;
-  name: "Beverages" | "Household" | "Snacks";
+  name: "Beverages" | "Snacks" | "Household";
 }
 
 export const PRODUCT_CATEGORIES: ProductCategory[] = [
   { id: 1, name: "Beverages" },
-  { id: 2, name: "Household" },
-  { id: 3, name: "Snacks" }
+  { id: 2, name: "Snacks" },
+  { id: 3, name: "Household" }
 ];
