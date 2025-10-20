@@ -2,7 +2,18 @@
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
+  app: {
+    head: {
+      title: 'Toko Kelontong Mas Yanto',
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
+      ]
+    }
+  },
   compatibilityDate: '2025-07-15',
+  typescript: {
+    strict: false,
+  },
   devtools: { enabled: true },
   modules: [
     '@nuxt/eslint',
