@@ -1,13 +1,15 @@
 <script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel'
+import { 
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationEllipsis
+} from '@/components/ui/pagination'
 import type { Product } from '@/models/Product'
 
 const emit = defineEmits(['add-to-cart'])
@@ -23,12 +25,40 @@ const props = defineProps({
   }
 })
 
+const currentPage = ref(1)
+const isMobile = ref(window.innerWidth < 768)
+const itemsPerPage = computed(() => isMobile.value ? 6 : 4)
+
+const paginatedProducts = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  const end = start + itemsPerPage.value
+  return props.products.slice(start, end)
+})
+
+const handleResize = () => {
+  isMobile.value = window.innerWidth < 768
+}
+
+onMounted(() => {
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
+
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
     minimumFractionDigits: 0
   }).format(price)
+}
+
+const handleImageError = (event) => {
+  const img = event.target
+  img.src = '/images/products/doritos.jpg'
+  img.onerror = null
 }
 </script>
 
@@ -48,43 +78,59 @@ const formatPrice = (price: number) => {
       <p class="text-gray-500">Tidak ada produk yang tersedia</p>
     </div>
 
-    <Carousel
-      v-else
-      class="w-full"
-      :opts="{
-        align: 'start',
-        dragFree: true,
-        skipSnaps: true
-      }"
-    >
-      <CarouselContent class="-ml-4">
-        <CarouselItem v-for="product in products" :key="product.id" class="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
-          <Card class="h-full">
-            <CardHeader class="p-0 h-48 flex justify-center">
-              <img :src="product.image || '/images/products/doritos.jpg'" :alt="product.name" class="w-full h-48 object-cover">
-            </CardHeader>
-            <CardContent class="text-center">
-              <CardTitle class="line-clamp-1">{{ product.name }}</CardTitle>
-              <CardDescription v-if="product.description" class="line-clamp-2 mt-2">
-                {{ product.description }}
-              </CardDescription>
-              <p class="text-lg font-semibold text-primary mt-2">{{ formatPrice(product.price) }}</p>
-            </CardContent>
-            <CardFooter>
-              <Button 
-                class="w-full"
-                :disabled="product.stock === 0"
-                @click="emit('add-to-cart', product)"
-              >
-                Beli
-              </Button>
-            </CardFooter>
-          </Card>
-        </CarouselItem>
-      </CarouselContent>
+    <div v-else class="space-y-6">
+      <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+        <Card v-for="product in paginatedProducts" :key="product.id" class="h-full">
+          <CardHeader class="p-0 h-48 flex justify-center">
+            <img 
+              :src="product.image" 
+              :alt="product.name" 
+              class="w-full h-48 object-cover"
+              @error="handleImageError">
+          </CardHeader>
+          <CardContent class="text-center">
+            <CardTitle class="line-clamp-1">{{ product.name }}</CardTitle>
+            <CardDescription v-if="product.description" class="line-clamp-2 mt-2">
+              {{ product.description }}
+            </CardDescription>
+            <p class="text-lg font-semibold text-primary mt-2">{{ formatPrice(product.price) }}</p>
+          </CardContent>
+          <CardFooter>
+            <Button 
+              class="w-full"
+              @click="emit('add-to-cart', product)"
+            >
+              Beli
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
 
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+      <div class="flex justify-center mt-8">
+        <Pagination 
+          v-slot="{ page }" 
+          :items-per-page="itemsPerPage" 
+          :total="products.length" 
+          v-model:page="currentPage"
+        >
+          <PaginationContent v-slot="{ items }">
+            <PaginationPrevious />
+
+            <div v-for="(item, index) in items" :key="index">
+              <PaginationItem
+                v-if="item.type === 'page'"
+                :value="item.value"
+                :is-active="item.value === page"
+              >
+                {{ item.value }}
+              </PaginationItem>
+              <PaginationEllipsis v-else-if="item.type === 'ellipsis'" :index="index" />
+            </div>
+
+            <PaginationNext />
+          </PaginationContent>
+        </Pagination>
+      </div>
+    </div>
   </div>
 </template>
