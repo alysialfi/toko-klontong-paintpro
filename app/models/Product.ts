@@ -1,5 +1,5 @@
 export type Product = {
-  id: number;
+  _id: string;
   CategoryId: number;
   categoryName: string;
   sku: string;
@@ -12,3 +12,16 @@ export type Product = {
   image: string;
   price: number;
 };
+
+export type ProductCreateInput = Omit<Product, '_id'>;
+
+export type ProductCategory = {
+  id: 1 | 2 | 3;
+  name: "Beverages" | "Household" | "Snacks";
+}
+
+export const PRODUCT_CATEGORIES: ProductCategory[] = [
+  { id: 1, name: "Beverages" },
+  { id: 2, name: "Household" },
+  { id: 3, name: "Snacks" }
+];
