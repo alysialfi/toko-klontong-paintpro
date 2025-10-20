@@ -31,6 +31,16 @@ export const useProductStore = defineStore('product', {
     
     getProductById: (state) => {
       return (productId: string) => state.products.find((product) => product._id === productId)
+    },
+
+    searchProducts: (state) => {
+      return (query: string) => {
+        if (!query) return state.products
+        const searchQuery = query.toLowerCase()
+        return state.products.filter(product => 
+          product.name.toLowerCase().includes(searchQuery)
+        )
+      }
     }
   },
 
