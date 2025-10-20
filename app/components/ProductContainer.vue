@@ -26,8 +26,8 @@ const props = defineProps({
 })
 
 const currentPage = ref(1)
-const isMobile = ref(window.innerWidth < 768)
-const itemsPerPage = computed(() => isMobile.value ? 6 : 4)
+const isMobile = ref(true)
+const itemsPerPage = computed(() => isMobile.value ? 6 : 12)
 
 const paginatedProducts = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value
@@ -40,6 +40,7 @@ const handleResize = () => {
 }
 
 onMounted(() => {
+  isMobile.value = window.innerWidth < 768
   window.addEventListener('resize', handleResize)
 })
 
