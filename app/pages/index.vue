@@ -73,5 +73,19 @@ const addToCart = (product: Product) => {
         />
       </div>
     </section>
+
+    <!-- Promo Section -->
+    <section id="promo" class="py-14 md:py-28 px-8 md:px-0">
+      <div class="flex flex-col md:flex-row gap-8 md:px-0 sm:container sm:items-center">
+        <img src="/images/promo/illustration.jpg" alt="Cart full of snacks" class="w-full h-auto md:w-1/2">
+        <div class="w-full md:w-1/2 flex items-center">
+          <div class="w-full flex flex-col justify-center text-left">
+            <h2 class="text-xl md:text-3xl font-bold mb-4">Super hemat bulan ini!</h2>
+            <p class="text-base md:text-xl mb-6">Dari kebutuhan dapur, minuman dingin, hingga perlengkapan rumah tangga ada di satu tempat! Nikmati harga terjangkau dan stok fresh setiap hari.</p>
+            <Button @click="router.push('/product/')" class="self-start">Klaim Promo</Button>
+          </div>
+        </div>
+      </div>
+    </section>
   </section>
 </template>
